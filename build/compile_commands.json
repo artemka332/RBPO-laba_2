@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/workspace/build",
+  "command": "/usr/bin/cc  -I/workspace/include  -Wall -Wextra -O0 -g -std=gnu99 -o CMakeFiles/telemetry_server.dir/src/main.c.o -c /workspace/src/main.c",
+  "file": "/workspace/src/main.c"
+},
+{
+  "directory": "/workspace/build",
+  "command": "/usr/bin/cc  -I/workspace/include  -Wall -Wextra -O0 -g -std=gnu99 -o CMakeFiles/telemetry_server.dir/src/telemetry_service.c.o -c /workspace/src/telemetry_service.c",
+  "file": "/workspace/src/telemetry_service.c"
+}
+]

@@ -1,0 +1,61 @@
+stages:
+  - build
+  - test
+  - lint
+  - sast
+  - security_gate
+
+variables:
+  DOCKER_IMAGE: "nku-ci:latest"
+
+default:
+  image: $DOCKER_IMAGE
+
+# Стадия 1: Сборка
+build_server:
+  stage: build
+  script:
+    - cmake -B build -S .
+    - cmake --build build
+  artifacts:
+    paths:
+      - build/telemetry_server
+      - build/compile_commands.json
+    expire_in: 1 day
+
+# Стадия 2: Дымовой тест
+smoke_test:
+  stage: test
+  dependencies:
+    - build_server
+  script:
+    - ./build/telemetry_server test
+
+# Стадия 3: Линтер качества кода
+lint_clang_tidy:
+  stage: lint
+  dependencies:
+    - build_server
+  script:
+    - clang-tidy -p build src/*.c --
+  allow_failure: true
+
+# Стадия 4: Статический анализ безопасности (SAST)
+sast_cppcheck:
+  stage: sast
+  script:
+    - cppcheck --enable=all --inconclusive --xml --xml-version=2 
+               -I include src/ 2> sast-report.xml
+  artifacts:
+    when: always
+    paths:
+      - sast-report.xml
+    expire_in: 1 day
+
+# Стадия 5: Security Gate
+security_gate:
+  stage: security_gate
+  dependencies:
+    - sast_cppcheck
+  script:
+    - python3 security_gate.py sast-report.xml

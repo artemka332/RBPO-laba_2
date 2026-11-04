@@ -1,0 +1,1 @@
+/usr/bin/cc  -Wall -Wextra -O0 -g CMakeFiles/telemetry_server.dir/src/main.c.o CMakeFiles/telemetry_server.dir/src/telemetry_service.c.o -o telemetry_server 
